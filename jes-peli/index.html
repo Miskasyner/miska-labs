@@ -98,6 +98,12 @@ p{margin:0;line-height:1.5}
 .qrview .url{font-size:15px;color:var(--muted);word-break:break-all}
 .qrview .duo{justify-content:center;min-height:0}
 .qrview .alp{width:72px;height:84px}
+@media (max-width:560px){
+  .duo{flex-wrap:wrap;gap:6px 8px;min-height:0}
+  .duo .bubble{order:-1;flex:1 1 100%;margin:0 0 6px}
+  .duo .bubble::after{left:34px;bottom:-8px;border:8px solid transparent;border-top-color:var(--sun);border-bottom:0}
+  .alp{width:76px;height:88px}
+}
 @media (max-width:560px){ .qr{display:none} .cta{grid-template-columns:1fr} .opt{min-height:112px} .opt .ic{font-size:34px} .patch{padding:18px 16px 20px} }
 @media (prefers-reduced-motion:reduce){ .pop,.alp.bob{animation:none} .opt,.btn{transition:none} }
 </style>
