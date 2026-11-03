@@ -1,0 +1,345 @@
+<!doctype html>
+<html lang="fi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Mikä JES-tapahtuma olet? 30 sekunnin peli Jyväskylä Entrepreneurship Societyltä.">
+<title>Mikä JES-tapahtuma olet?</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hind+Madurai:wght@400;600;700&display=swap">
+<style>
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0}
+img{max-width:100%}
+[hidden]{display:none!important}
+:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+/* Layout: one-screen game card on JES turquoise, styled like an embroidered overall patch (stitched borders) in JES logo colours. Single committed look. */
+:root{
+  --ground:#37B9D7;      /* JES-sivuston turkoosi */
+  --patch:#FFFFFF;
+  --ink:#181818;         /* logon musta */
+  --sun:#FFCA44;         /* logon keltainen */
+  --coral:#DB1D42;       /* logon tummanpunainen */
+  --coral-deep:#A3122F;
+  --orange:#FAAA41;      /* logon oranssi */
+  --sky:#61AADE;         /* logon sininen */
+  --teal-ink:#16708A;    /* turkoosi tekstinä, luettava valkoisella */
+  --muted:#4B4F55;
+  --display:"Hind Madurai", Helvetica, Arial, sans-serif;
+  --body:"Hind Madurai", Helvetica, Arial, sans-serif;
+  color-scheme:light;
+}
+html,body{height:100%}
+body{background:var(--ground);color:var(--ink);font-family:var(--body);font-size:16px;
+  background-image:radial-gradient(circle at 20% 10%, rgba(255,255,255,.08) 0 2px, transparent 3px),radial-gradient(circle at 70% 60%, rgba(255,255,255,.06) 0 2px, transparent 3px);
+  background-size:38px 38px, 52px 52px;}
+.wrap{min-height:100%;display:flex;align-items:center;justify-content:center;
+  padding-block:20px;padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px));box-sizing:border-box}
+.patch{position:relative;width:100%;max-width:560px;background:var(--patch);border-radius:28px;padding:22px 22px 24px;box-sizing:border-box;
+  box-shadow:0 0 0 6px var(--patch), 0 0 0 9px var(--sun), 0 18px 40px rgba(8,60,80,.35);}
+.patch::before{content:"";position:absolute;inset:8px;border:2.5px dashed var(--sun);border-radius:22px;pointer-events:none;opacity:.9}
+.top{display:flex;justify-content:space-between;align-items:center;gap:12px;position:relative}
+.brand{display:block;width:64px;height:64px;margin:-6px 0 -6px -4px}
+.lang{display:flex;gap:4px;background:#EEF7FA;border-radius:999px;padding:3px}
+.lang button{border:0;background:transparent;font:700 13px var(--body);color:var(--muted);padding:6px 11px;border-radius:999px;cursor:pointer}
+.lang button[aria-pressed="true"]{background:var(--ink);color:#fff}
+.screen{position:relative;display:flex;flex-direction:column;gap:16px;padding-top:14px}
+h1,h2{font-family:var(--display);font-weight:700;margin:0;text-wrap:balance;line-height:1.05}
+h1{font-size:clamp(34px,9vw,52px);letter-spacing:-.02em}
+h2{font-size:clamp(24px,6.4vw,32px);letter-spacing:-.01em}
+p{margin:0;line-height:1.5}
+.lead{font-size:17px;color:var(--muted);max-width:40ch}
+.duo{display:flex;align-items:flex-end;gap:10px;min-height:120px}
+.alp{width:96px;height:112px;flex:none}
+.alp.small{width:64px;height:76px}
+.bubble{position:relative;background:var(--sun);color:var(--ink);font-weight:600;border-radius:18px;padding:11px 14px;font-size:15px;line-height:1.35;margin-bottom:42px;min-width:0}
+.bubble b{display:block;font-family:var(--display);font-weight:700;font-size:12px;letter-spacing:.08em;text-transform:uppercase;margin-bottom:2px}
+.bubble::after{content:"";position:absolute;left:-8px;bottom:14px;border:8px solid transparent;border-right-color:var(--sun);border-left:0}
+.btn{appearance:none;border:0;cursor:pointer;font-family:var(--display);font-weight:700;font-size:21px;border-radius:16px;padding:15px 20px 13px;
+  background:var(--coral);color:#fff;box-shadow:0 5px 0 var(--coral-deep);transition:transform .08s, box-shadow .08s;text-align:center;text-decoration:none;display:block}
+.btn:active{transform:translateY(4px);box-shadow:0 1px 0 var(--coral-deep)}
+.btn:focus-visible,.opt:focus-visible,.lang button:focus-visible,.link:focus-visible{outline:3px solid var(--sky);outline-offset:3px}
+.stitches{display:flex;gap:8px}
+.stitches i{flex:1;height:6px;border-radius:3px;background:#E4EEF2}
+.stitches i.on{background:var(--coral)}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.opt{appearance:none;cursor:pointer;border:2.5px solid var(--ink);background:#fff;border-radius:18px;padding:14px 10px;display:flex;flex-direction:column;align-items:center;gap:8px;
+  font:700 15px/1.25 var(--body);color:var(--ink);min-height:128px;justify-content:center;text-align:center;transition:transform .12s, background .12s}
+.opt .ic{font-size:40px;line-height:1}
+.opt:hover{background:#FFF4D6}
+.opt.picked{background:var(--sun);transform:scale(.96)}
+.result-name{color:var(--coral)}
+.kicker{font:700 13px var(--body);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.fact{font-size:17px}
+.jes{font-size:14px;color:var(--muted);border-top:2px dashed #E4EEF2;padding-top:12px}
+.cta{display:grid;grid-template-columns:1fr auto;gap:14px;align-items:center}
+.cta-main{display:flex;flex-direction:column;gap:10px;min-width:0}
+.cta small{font-size:14px;color:var(--muted);line-height:1.4}
+.qr{display:flex;flex-direction:column;align-items:center;gap:6px;font:600 12px var(--body);color:var(--muted)}
+.qr #qrbox{background:var(--patch);padding:6px;border-radius:10px;border:2px solid var(--ink);line-height:0}
+.qr #qrbox img,.qr #qrbox canvas{width:104px;height:104px}
+.row{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.link{color:var(--teal-ink);font-weight:700;font-size:15px}
+.again{appearance:none;border:2.5px solid var(--ink);background:transparent;border-radius:999px;padding:9px 16px;font:700 15px var(--body);color:var(--ink);cursor:pointer}
+.pop{animation:pop .35s ease-out}
+@keyframes pop{from{transform:translateY(10px);opacity:.3}to{transform:none;opacity:1}}
+.alp.bob{animation:bob 2.4s ease-in-out infinite}
+.alp.bob.late{animation-delay:-1.2s}
+@keyframes bob{50%{transform:translateY(-4px)}}
+.qr-toggle{position:fixed;right:calc(12px + env(safe-area-inset-right, 0px));bottom:calc(12px + env(safe-area-inset-bottom, 0px));z-index:5;
+  appearance:none;border:0;cursor:pointer;width:44px;height:44px;border-radius:12px;background:rgba(255,255,255,.22);color:#fff;display:grid;place-items:center;opacity:.75}
+.qr-toggle:hover,.qr-toggle:focus-visible{opacity:1;background:rgba(255,255,255,.35)}
+.qr-toggle:focus-visible{outline:3px solid var(--ink);outline-offset:2px}
+.qr-toggle svg{width:24px;height:24px}
+.qrview{align-items:center;text-align:center;gap:14px}
+.qrview .big{background:#fff;padding:14px;border-radius:18px;border:3px solid var(--ink);line-height:0}
+.qrview .big img,.qrview .big canvas{width:min(68vw,340px);height:min(68vw,340px)}
+.qrview .url{font-size:15px;color:var(--muted);word-break:break-all}
+.qrview .duo{justify-content:center;min-height:0}
+.qrview .alp{width:72px;height:84px}
+@media (max-width:560px){ .qr{display:none} .cta{grid-template-columns:1fr} .opt{min-height:112px} .opt .ic{font-size:34px} .patch{padding:18px 16px 20px} }
+@media (prefers-reduced-motion:reduce){ .pop,.alp.bob{animation:none} .opt,.btn{transition:none} }
+</style>
+</head>
+<body>
+
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="alpaca" viewBox="0 0 120 140">
+      <!-- legs -->
+      <rect x="34" y="104" width="9" height="30" rx="4" fill="currentColor" stroke="#181818" stroke-width="2.5"/>
+      <rect x="50" y="106" width="9" height="28" rx="4" fill="currentColor" stroke="#181818" stroke-width="2.5"/>
+      <rect x="70" y="106" width="9" height="28" rx="4" fill="currentColor" stroke="#181818" stroke-width="2.5"/>
+      <rect x="86" y="104" width="9" height="30" rx="4" fill="currentColor" stroke="#181818" stroke-width="2.5"/>
+      <!-- fluffy body -->
+      <path d="M26 96c-6-14 4-26 16-26 2-8 14-11 20-5 6-7 19-5 22 4 12-1 20 10 15 21 7 7 1 20-10 18-4 7-16 8-21 2-7 6-19 5-23-2-11 2-19-4-19-12z" fill="currentColor" stroke="#181818" stroke-width="2.5"/>
+      <!-- neck -->
+      <path d="M78 76c-2-14-3-28-1-42h18c2 14 2 28 0 42z" fill="currentColor" stroke="#181818" stroke-width="2.5"/>
+      <!-- scarf -->
+      <path d="M75 62h22v9H75z" fill="var(--scarf)" stroke="#181818" stroke-width="2.5"/>
+      <path d="M90 70l4 14-8-2z" fill="var(--scarf)" stroke="#181818" stroke-width="2.5" stroke-linejoin="round"/>
+      <!-- ears -->
+      <path d="M76 22l-3-15 9 9z" fill="currentColor" stroke="#181818" stroke-width="2.5" stroke-linejoin="round"/>
+      <path d="M96 22l3-15-9 9z" fill="currentColor" stroke="#181818" stroke-width="2.5" stroke-linejoin="round"/>
+      <!-- head -->
+      <path d="M72 30c0-10 7-15 14-15s14 5 14 15c0 6-2 10-4 13 3 2 4 5 2 8-2 4-8 5-12 5s-10-1-12-5c-2-3-1-6 2-8-2-3-4-7-4-13z" fill="currentColor" stroke="#181818" stroke-width="2.5"/>
+      <!-- tuft -->
+      <path d="M76 18c2-6 7-8 10-5 3-3 9-1 10 5" fill="currentColor" stroke="#181818" stroke-width="2.5"/>
+      <circle cx="80" cy="33" r="2.6" fill="#181818"/>
+      <circle cx="92" cy="33" r="2.6" fill="#181818"/>
+      <path d="M83 46q3 3 6 0" fill="none" stroke="#181818" stroke-width="2.2" stroke-linecap="round"/>
+      <ellipse cx="86" cy="42" rx="3" ry="2" fill="#181818"/>
+      <circle cx="77" cy="40" r="2.5" fill="#FF9C8F" opacity=".7"/>
+      <circle cx="95" cy="40" r="2.5" fill="#FF9C8F" opacity=".7"/>
+    </symbol>
+  </defs>
+</svg>
+
+<div class="wrap">
+  <main class="patch" id="app" aria-live="polite"></main>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script>
+const IG = "https://www.instagram.com/jyvaskyla_es/";
+const LI = "https://www.linkedin.com/company/jyv-skyl-entrepreneurship-society/";
+const IDLE_MS = 60000; // palaa alkuun minuutin hiljaisuuden jälkeen (pisteellä seuraavaa pelaajaa varten)
+
+const UI = {
+  fi:{start_title:"Mikä JES-tapahtuma olet?", start_lead:"3 kysymystä, puoli minuuttia. Jorma ja Birgitta kertovat loput.",
+      start_btn:"Aloita", hello:"Moi! Me ollaan Jorma ja Birgitta, JESin alpakat. Löydetään sun tapahtuma.",
+      q:"Kysymys", of:"/", you_are:"Sinä olet",
+      jes:"JES on yrittäjähenkinen yhteisö opiskelijoilta opiskelijoille. Tapahtumat ja jäsenyys ovat maksuttomia.",
+      follow:"Seuraa @jyvaskyla_es", follow_hint:n=>`Instagramissa näet ensimmäisenä, milloin seuraava ${n} on.`,
+      li:"Tai seuraa LinkedInissä", scan:"Skannaa puhelimella", again:"Seuraava pelaaja ↻",
+      qr_title:"Skannaa ja pelaa omalla puhelimella", qr_lead:"Avaa puhelimen kamera ja osoita koodia. Peli kestää puoli minuuttia.", qr_btn:"Näytä pelin QR-koodi", qr_close:"Takaisin peliin"},
+  en:{start_title:"Which JES event are you?", start_lead:"3 questions, 30 seconds. Jorma and Birgitta will tell you the rest.",
+      start_btn:"Start", hello:"Hi! We're Jorma and Birgitta, the JES alpacas. Let's find your event.",
+      q:"Question", of:"/", you_are:"You are",
+      jes:"JES is an entrepreneurial community by students, for students. Events and membership are free.",
+      follow:"Follow @jyvaskyla_es", follow_hint:n=>`Instagram is where you'll see the next ${n} first.`,
+      li:"Or follow on LinkedIn", scan:"Scan with your phone", again:"Next player ↻",
+      qr_title:"Scan to play on your phone", qr_lead:"Open your phone camera and point it at the code. The game takes 30 seconds.", qr_btn:"Show the game QR code", qr_close:"Back to the game"}
+};
+
+// Jokainen vastaus antaa pisteitä yhdelle tai kahdelle tapahtumalle. Eniten pisteitä saanut on tulos.
+const QS = [
+  {fi:"Mikä saa sinut lähtemään liikkeelle?", en:"What gets you out the door?", opts:[
+    {ic:"🥞", fi:"Hyvä ruoka ja uudet tyypit", en:"Good food and new people", w:{brunssi:2}},
+    {ic:"✈️", fi:"Uusi kaupunki", en:"A new city", w:{excu:2}},
+    {ic:"🧖", fi:"Sauna ja porukka eri maista", en:"Sauna and people from everywhere", w:{sweat:2}},
+    {ic:"🔬", fi:"Iso ongelma ratkaistavaksi", en:"A big problem to solve", w:{spinout:2, shimmer:1}}]},
+  {fi:"Miten opit parhaiten?", en:"How do you learn best?", opts:[
+    {ic:"💬", fi:"Rennosti jutellen", en:"Chatting casually", w:{brunssi:1, sweat:1}},
+    {ic:"🏢", fi:"Näkemällä paikan päällä", en:"Seeing it on site", w:{excu:2}},
+    {ic:"🛠️", fi:"Tekemällä tiimissä viikkoja", en:"Building with a team for weeks", w:{shimmer:2}},
+    {ic:"🧪", fi:"Viemällä tutkimusta käytäntöön", en:"Turning research into practice", w:{spinout:2}}]},
+  {fi:"Täydellinen lauantai?", en:"Your perfect Saturday?", opts:[
+    {ic:"☕", fi:"Tunnen jo puolet paikalla olijoista", en:"I already know half the room", w:{brunssi:2}},
+    {ic:"🧳", fi:"Kone lähtee aamulla", en:"The flight leaves in the morning", w:{excu:2}},
+    {ic:"🌍", fi:"Opin uuden sanan uudella kielellä", en:"I learn a word in a new language", w:{sweat:2}},
+    {ic:"💡", fi:"Ideasta tulee prototyyppi", en:"An idea becomes a prototype", w:{shimmer:2, spinout:1}}]}
+];
+
+const RES = {
+  brunssi:{who:"jorma", ic:"🥞",
+    fi:{name:"Sunnuntaibrunssi", short:"brunssi", fact:"Yleensä kuun ensimmäisenä sunnuntaina. Pöydät notkuvat herkkuja, paikalla on usein yritys kertomassa toiminnastaan, ja ennen kaikkea tutustut uusiin ihmisiin.", say:"Brunssilla minä olen aina ensimmäisenä jonossa."},
+    en:{name:"Sunday Brunch", short:"brunch", fact:"Usually on the first Sunday of the month. Tables full of treats, often a local company sharing what they do, and above all new people to meet.", say:"I'm always first in line at brunch."}},
+  excu:{who:"birgitta", ic:"✈️",
+    fi:{name:"Excu", short:"Excu", fact:"JES Excuilla päästään yritysten arkeen ja vieraillaan toimistoilla kotimaassa ja ulkomailla. Vuoden 2026 Excu suuntaa Amsterdamiin.", say:"Pakkaan jo laukkua. Amsterdam, täältä tullaan!"},
+    en:{name:"Excu", short:"Excu", fact:"JES excursions take you inside companies, with office visits in Finland and abroad. The 2026 Excu heads to Amsterdam.", say:"I'm already packing. Amsterdam, here we come!"}},
+  sweat:{who:"jorma", ic:"🧖",
+    fi:{name:"Sweatnesday", short:"Sweatnesday", fact:"Kansainväliset ja suomalaiset opiskelijat samassa illassa: kiinnostava puhuja, pieni workshop, tarjoilua ja tietenkin sauna.", say:"Villa ja sauna, ihan paras yhdistelmä."},
+    en:{name:"Sweatnesday", short:"Sweatnesday", fact:"International and Finnish students in one evening: an interesting speaker, a short workshop, snacks and of course a sauna.", say:"Wool and sauna, the best combo there is."}},
+  shimmer:{who:"birgitta", ic:"💡",
+    fi:{name:"Shimmer", short:"Shimmer", fact:"Moniviikkoinen yrittäjyys- ja innovaatiopolku opiskelijoille. Tiimissä ideasta pääsee oikeasti eteenpäin, syksyllä Jyväskylässä.", say:"Sinussa on kipinää. Shimmer on sun juttu."},
+    en:{name:"Shimmer", short:"Shimmer", fact:"A multi-week entrepreneurship and innovation path for students. In a team your idea actually moves forward, in the autumn in Jyväskylä.", say:"You've got a spark. Shimmer is your thing."}},
+  spinout:{who:"jorma", ic:"🔬",
+    fi:{name:"Spinout", short:"Spinout", fact:"Opiskelijatiimit JYU:sta ja JAMKista auttavat tutkijoita kaupallistamaan oikeaa deeptech-tutkimusta. 9.–10.12.2026 Jyväskylässä.", say:"Laboratorio ei ole päätepiste. Siitä se vasta alkaa."},
+    en:{name:"Spinout", short:"Spinout", fact:"Student teams from JYU and JAMK help researchers commercialise real deep-tech research. 9–10 Dec 2026 in Jyväskylä.", say:"The lab isn't the finish line. That's where it starts."}}
+};
+const ORDER = ["brunssi","excu","sweat","shimmer","spinout"];
+
+let lang = "fi", step = -1, score = {}, idle = null;
+const app = document.getElementById("app");
+const t = k => UI[lang][k];
+
+function alpaca(name, extra=""){
+  const fleece = name==="jorma" ? "#C98B57" : "#F3E3C3";
+  const scarf  = name==="jorma" ? "var(--sun)" : "var(--coral)";
+  const flip = name==="birgitta" ? ' style="transform:scaleX(-1)"' : "";
+  return `<svg class="alp ${extra}" role="img" aria-label="${name==="jorma"?"Jorma":"Birgitta"}" style="color:${fleece};--scarf:${scarf}"><g${flip==""?"":' transform="translate(120,0) scale(-1,1)"'}><use href="#alpaca"/></g></svg>`;
+}
+// Alpakan SVG piirretään viewBoxin mukaan; peilaus tehdään <g>-ryhmällä, jotta Birgitta katsoo toiseen suuntaan.
+function svgFix(){ app.querySelectorAll("svg.alp").forEach(s=>s.setAttribute("viewBox","0 0 120 140")); }
+
+function header(){
+  return `<div class="top"><img class="brand" src="data:image/webp;base64,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" alt="Jyväskylä Entrepreneurship Society">
+    <div class="lang" role="group" aria-label="Kieli / Language">
+      <button id="lang-fi" aria-pressed="${lang==="fi"}">FI</button>
+      <button id="lang-en" aria-pressed="${lang==="en"}">EN</button></div></div>`;
+}
+function bindLang(){
+  document.getElementById("lang-fi").onclick=()=>{lang="fi";render();};
+  document.getElementById("lang-en").onclick=()=>{lang="en";render();};
+}
+
+// QR-koodi vie sivun omaan julkiseen osoitteeseen. Jos sivua katsotaan muualta (esim. Claude-esikatselu),
+// käytetään varaosoitetta, jottei QR osoita tekniseen esikatseluosoitteeseen.
+const FALLBACK_URL = "https://miska-labs.pages.dev/jes-peli/";
+const PLAY_URL = (location.protocol.startsWith("http") && !/claude|anthropic|localhost/.test(location.host))
+  ? location.origin + location.pathname : FALLBACK_URL;
+let showQR = false;
+
+function render(){
+  armIdle();
+  qrToggle();
+  if(showQR) return renderQRView();
+  if(step<0) return renderStart();
+  if(step<QS.length) return renderQ();
+  renderResult();
+}
+
+function renderStart(){
+  app.innerHTML = header() + `<section class="screen pop">
+    <h1>${t("start_title")}</h1>
+    <p class="lead">${t("start_lead")}</p>
+    <div class="duo">${alpaca("jorma","bob")}${alpaca("birgitta","bob late")}<div class="bubble">${t("hello")}</div></div>
+    <button class="btn" id="go">${t("start_btn")}</button></section>`;
+  svgFix(); bindLang();
+  document.getElementById("go").onclick=()=>{step=0;score={};render();};
+}
+
+function renderQ(){
+  const q = QS[step];
+  const st = QS.map((_,i)=>`<i class="${i<=step?"on":""}"></i>`).join("");
+  app.innerHTML = header() + `<section class="screen pop">
+    <div class="stitches" aria-label="${t("q")} ${step+1}${t("of")}${QS.length}">${st}</div>
+    <span class="kicker">${t("q")} ${step+1}${t("of")}${QS.length}</span>
+    <h2>${q[lang]}</h2>
+    <div class="opts">${q.opts.map((o,i)=>`<button class="opt" id="opt-${step}-${i}" data-i="${i}"><span class="ic" aria-hidden="true">${o.ic}</span>${o[lang]}</button>`).join("")}</div>
+    </section>`;
+  bindLang();
+  app.querySelectorAll(".opt").forEach(b=>b.onclick=()=>{
+    const o = q.opts[+b.dataset.i];
+    for(const k in o.w) score[k]=(score[k]||0)+o.w[k];
+    score._last = o.w;
+    b.classList.add("picked");
+    app.querySelectorAll(".opt").forEach(x=>x.disabled=true);
+    setTimeout(()=>{step++;render();}, 260);
+  });
+}
+
+function winner(){
+  // Tasatilanteessa ratkaisee viimeinen vastaus, sitten kiinteä järjestys.
+  let best=null;
+  for(const k of ORDER){
+    const s=score[k]||0, b=best?score[best]||0:-1;
+    if(s>b || (s===b && (score._last[k]||0)>(score._last[best]||0))) best=k;
+  }
+  return best;
+}
+
+function renderResult(){
+  if(!score._key) score._key = winner();
+  const r = RES[score._key], c = r[lang];
+  app.innerHTML = header() + `<section class="screen pop">
+    <span class="kicker">${t("you_are")}</span>
+    <h1 class="result-name">${c.name} <span aria-hidden="true">${r.ic}</span></h1>
+    <p class="fact">${c.fact}</p>
+    <div class="duo">${alpaca(r.who,"bob")}<div class="bubble"><b>${r.who==="jorma"?"Jorma":"Birgitta"}</b>${c.say}</div></div>
+    <div class="cta">
+      <div class="cta-main">
+        <a class="btn ig" href="${IG}" target="_blank" rel="noopener">${t("follow")}</a>
+        <small>${t("follow_hint")(c.short)}</small>
+      </div>
+      <div class="qr"><div id="qrbox"></div><span>${t("scan")}</span></div>
+    </div>
+    <p class="jes">${t("jes")}</p>
+    <div class="row"><a class="link" href="${LI}" target="_blank" rel="noopener">${t("li")}</a>
+      <button class="again" id="again">${t("again")}</button></div>
+    </section>`;
+  svgFix(); bindLang();
+  try{ if(window.QRCode) new QRCode(document.getElementById("qrbox"),{text:IG,width:208,height:208,colorDark:"#181818",colorLight:"#FFFFFF",correctLevel:QRCode.CorrectLevel.M}); }catch(e){}
+  document.getElementById("again").onclick=reset;
+}
+
+// Pieni QR-nappi oikeassa alanurkassa, vain aloitusnäkymässä. Se on pisteen pitäjää varten, ei pelaajaa.
+function qrToggle(){
+  let b = document.getElementById("qr-toggle");
+  const visible = step<0 && !showQR;
+  if(!b){
+    b = document.createElement("button"); b.id="qr-toggle"; b.className="qr-toggle";
+    b.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3h-3zM20 14v.01M14 20h.01M17 20h4v-3"/></svg>';
+    b.onclick = ()=>{ showQR=true; render(); };
+    document.body.appendChild(b);
+  }
+  b.setAttribute("aria-label", t("qr_btn")); b.title = t("qr_btn");
+  b.hidden = !visible;
+}
+
+function renderQRView(){
+  app.innerHTML = header() + `<section class="screen qrview pop">
+    <h2>${t("qr_title")}</h2>
+    <div class="big" id="qrbig"></div>
+    <p class="url">${PLAY_URL.replace(/^https?:\/\//,"")}</p>
+    <p class="lead">${t("qr_lead")}</p>
+    <div class="duo">${alpaca("jorma","bob")}${alpaca("birgitta","bob late")}</div>
+    <button class="again" id="qr-close">${t("qr_close")}</button>
+    </section>`;
+  svgFix(); bindLang();
+  try{ if(window.QRCode) new QRCode(document.getElementById("qrbig"),{text:PLAY_URL,width:512,height:512,colorDark:"#181818",colorLight:"#FFFFFF",correctLevel:QRCode.CorrectLevel.M}); }catch(e){}
+  document.getElementById("qr-close").onclick=()=>{ showQR=false; render(); };
+}
+
+function reset(){ step=-1; score={}; render(); }
+function armIdle(){ clearTimeout(idle); if(step>=0) idle=setTimeout(reset, IDLE_MS); }
+["pointerdown","keydown"].forEach(ev=>document.addEventListener(ev, ()=>{ if(step>=0) armIdle(); }, {passive:true}));
+
+render();
+</script>
+
+</body>
+</html>
